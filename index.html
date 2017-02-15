@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Local weather</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  </head>
+  <body class="grey lighten-4">
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div id="app" class="container">
+      <h1>weather app</h1>
+      <dl>
+        <dt>location</dt>
+        <dd>{{ location.city }}, {{ location.country }}</dd>
+      </dl>
+
+      <dl>
+        <dt>weather</dt>
+        <dd>{{ weather }}</dd>
+      </dl>
+
+      <dl>
+        <dt>status</dt>
+        <dd>{{ status }}</dd>
+      </dl>
+
+      <dl>
+        <dt>icon</dt>
+        <dd>{{ icon }}</dd>
+      </dl>
+    </div>
+  </body>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        location: '',
+        weather: '-3',
+        status: 'Cloud',
+        icon: 'cloud'
+      }
+    });
+
+    setLocation(app);
+    setWeather(app);
+
+    function setLocation(app) {
+      var location = '';
+      $.ajax({
+        url: 'http://ipinfo.io/json',
+        success: function(data) {
+          app.location = data;
+        }
+      });
+    }
+
+    function setWeather(app) {
+      var api = 'http://api.openweathermap.org/data/2.5/weather?q=';
+      var units = '&units=metric';
+      var appid = '&APPID=061f24cf3cde2f60644a8240302983f2';
+      $.ajax({
+        url: api + app.location.city + units + appid,
+        success: function(data) {
+          app.weather = data[0].main;
+        }
+      });
+    }
+  </script>
+</html>
