@@ -364,65 +364,69 @@
       class="container"
       :style="{ 'background-image': 'url(https://source.unsplash.com/1600x900/?nature)' }"
     >
-      <dl>
-        <dt>location</dt>
-        <dd>{{ location.city }}, {{ location.country }}</dd>
-      </dl>
-
-      <dl>
-        <dt>temperature</dt>
-        <dd>{{ temperature }} <span class="unit">o</span>{{ unit }}</dd>
-      </dl>
-
-      <dl>
-        <dt>status</dt>
-        <dd>{{ status }}</dd>
-      </dl>
-
-      <dl>
-        <dt>icon</dt>
-        <dd>
-          <div class="icon sun-shower hidden dizzle">
-            <div class="cloud"></div>
-            <div class="sun">
-              <div class="rays"></div>
+      <div class="elems-wrapper">
+        <div class="elems-holder">
+          <div class="elems">
+            <h1>
+              {{ location.city }} {{ location.country }}
+            </h1>
+          </div>
+          <div class="elems">
+            {{ temperature }}
+            <span class="unit ">&#176;{{ unit }}</span>
+          </div>
+          <div class="elems">{{ status }}</div>
+          <div class="elems icon">
+            <div class="icon sun-shower hidden dizzle">
+              <div class="cloud"></div>
+              <div class="sun">
+                <div class="rays"></div>
+              </div>
+              <div class="rain"></div>
             </div>
-            <div class="rain"></div>
-          </div>
 
-          <div class="icon thunder-storm hidden thunderstom">
-            <div class="cloud"></div>
-            <div class="lightning">
-              <div class="bolt"></div>
-              <div class="bolt"></div>
+            <div class="icon thunder-storm hidden thunderstom">
+              <div class="cloud"></div>
+              <div class="lightning">
+                <div class="bolt"></div>
+                <div class="bolt"></div>
+              </div>
+            </div>
+
+            <div class="icon cloudy hidden clouds">
+              <div class="cloud"></div>
+              <div class="cloud"></div>
+            </div>
+
+            <div class="icon flurries hidden snow">
+              <div class="cloud"></div>
+              <div class="snow">
+                <div class="flake"></div>
+                <div class="flake"></div>
+              </div>
+            </div>
+
+            <div class="icon sunny hidden clear">
+              <div class="sun">
+                <div class="rays"></div>
+              </div>
+            </div>
+
+            <div class="icon rainy hidden rain">
+              <div class="cloud"></div>
+              <div class="rain"></div>
             </div>
           </div>
-
-          <div class="icon cloudy hidden clouds">
-            <div class="cloud"></div>
-            <div class="cloud"></div>
+          <div class="elems buttons">
+            <button v-on:click="changeUnit">
+              convert to
+              <span v-if="unit==='F'">&#176;C</span>
+              <span v-else>&#176;F</span>
+            </button>
+            <button onclick="location.reload()">change picture</button>
           </div>
-
-          <div class="icon flurries hidden snow">
-            <div class="cloud"></div>
-            <div class="snow">
-              <div class="flake"></div>
-              <div class="flake"></div>
-            </div>
-          </div>
-
-          <div class="icon sunny hidden clear">
-            <div class="sun">
-              <div class="rays"></div>
-            </div>
-          </div>
-
-          <div class="icon rainy hidden rain">
-            <div class="cloud"></div>
-            <div class="rain"></div>
-          </div>
-        </dd>
-      </dl>
+        </div>
+      </div>
     </div>
   </body>
 
@@ -434,12 +438,23 @@
         location: '',
         status: 'Cloud',
         temperature: '',
-        unit: 'F',
+        unit: 'C',
+        units: 'metric',
+        changeUnit: changeUnit,
       }
     });
 
     setLocation(app);
-    setWeather(app);
+
+    function changeUnit() {
+      app.unit = app.unit === 'C' ? 'F' : 'C';
+      if (app.unit === 'C') {
+        app.units = 'metric';
+      } else {
+        app.units = 'imperial';
+      }
+      setWeather(app);
+    }
 
     function setLocation(app) {
       var location = '';
@@ -447,28 +462,28 @@
         url: 'http://ipinfo.io/json',
         success: function(data) {
           app.location = data;
+          setWeather(app);
         }
       });
     }
 
     function setWeather(app) {
       var api = 'http://api.openweathermap.org/data/2.5/weather?q=';
-      var units = '&units=metric';
+      var units = '&units=' + app.units;
       var appid = '&APPID=061f24cf3cde2f60644a8240302983f2';
+      var city = app.location.city + ',' + app.location.country
       $.ajax({
-        url: api + app.location.city + units + appid,
+        url: api + city + units + appid,
         success: function(data) {
           app.status = data.weather[0].main;
           app.temperature = Math.round(data.main.temp);
           setWeatherIcon(app);
-          // app.fah = Math.round( ($scope.Data.temp * 9)/5 + 32 );
-          // app.cel = Math.round(data.main.temp);
         }
       });
     }
 
     function setWeatherIcon(app) {
-      var status = app.status.toLowerCase()
+      var status = app.status.toLowerCase();
       switch (status) {
         case 'dizzle':
           setIcon('dizzle');
