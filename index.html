@@ -9,24 +9,74 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <style>
-      .unit {
-        position: relative;
-        top: -7px;
-        font-size: 10px;
-        right: 1px;
-      }
-
       .hidden {
         display: none;
       }
 
       .container {
+        margin: 0px;
         width: 100%;
+        max-width: none;
         height: 100vh;
-        display: flex;
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
+      }
+
+      .elems-wrapper {
+        display: flex;
+        height: 100vh;
+        flex-direction: column;
+        width: 80%;
+        margin: auto;
+        align-items: center;
+      }
+
+      .elems-holder {
+        align-items: center;
+        min-width: 50%;
+        padding: 20px 50px 100px;
+        text-align: center;
+      }
+
+      .elems {
+        color: #fff;
+        font-weight: 400;
+        font-size: 300%;
+        margin-top: 10px;
+        position: relative;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        text-transform: lowercase;
+        text-shadow: 0px 0px 1px #57a6a8;
+      }
+
+      .elems.icon {
+        font-size: 150%;
+        margin-top: 100px;
+      }
+
+      .elems.buttons {
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+      }
+
+      h1 {
+        text-transform: uppercase;
+        font-size: 200%;
+        font-weight: 900;
+      }
+
+      .unit {
+        text-transform: uppercase;
+      }
+
+      button {
+        outline: none;
+        background: transparent;
+        border: none;
+        font-size: 50%;
       }
 
       /*
@@ -35,47 +85,47 @@
       http://codepen.io/joshbader/pen/EjXgqr
       */
       .cloud {
-        position: absolute;
-        z-index: 1;
-        top: 50%;
-        left: 50%;
-        width: 3.6875em;
-        height: 3.6875em;
-        margin: -1.84375em;
-        background: #000;
+        background: #fff;
         border-radius: 50%;
+        height: 3.6875em;
+        left: 50%;
+        margin: -1.84375em;
+        position: absolute;
+        top: 50%;
+        width: 3.6875em;
+        z-index: 1;
         box-shadow:
           -2.1875em 0.6875em 0 -0.6875em,
           2.0625em 0.9375em 0 -0.9375em,
-          0 0 0 0.375em #000,
-          -2.1875em 0.6875em 0 -0.3125em #000,
-          2.0625em 0.9375em 0 -0.5625em #000;
+          0 0 0 0.375em #fff,
+          -2.1875em 0.6875em 0 -0.3125em #fff,
+          2.0625em 0.9375em 0 -0.5625em #fff;
       }
       .cloud:after {
-        content: '';
-        position: absolute;
+        background: #fff;
         bottom: 0;
-        left: -0.5em;
+        box-shadow: 0 0.4375em 0 -0.0625em #fff;
+        content: '';
         display: block;
-        width: 4.5625em;
         height: 1em;
-        background: #000;
-        box-shadow: 0 0.4375em 0 -0.0625em #000;
+        left: -0.5em;
+        position: absolute;
+        width: 4.5625em;
       }
       .cloud:nth-child(2) {
         z-index: 0;
-        background: #000;
+        background: #fff;
         box-shadow:
-          -2.1875em 0.6875em 0 -0.6875em #000,
-          2.0625em 0.9375em 0 -0.9375em #000,
-          0 0 0 0.375em #000,
-          -2.1875em 0.6875em 0 -0.3125em #000,
-          2.0625em 0.9375em 0 -0.5625em #000;
+          -2.1875em 0.6875em 0 -0.6875em #fff,
+          2.0625em 0.9375em 0 -0.9375em #fff,
+          0 0 0 0.375em #fff,
+          -2.1875em 0.6875em 0 -0.3125em #fff,
+          2.0625em 0.9375em 0 -0.5625em #fff;
         opacity: 0.3;
         transform: scale(0.5) translate(6em, -3em);
         animation: cloud 4s linear infinite;
       }
-      .cloud:nth-child(2):after { background: #000; }
+      .cloud:nth-child(2):after { background: #fff; }
 
       .sun {
         position: absolute;
@@ -86,7 +136,7 @@
         margin: -1.25em;
         background: transparent;
         border-radius: 50%;
-        box-shadow: 0 0 0 0.375em #000;
+        box-shadow: 0 0 0 0.375em #fff;
         animation: spin 12s infinite linear;
       }
       .rays {
@@ -97,9 +147,9 @@
         width: 0.375em;
         height: 1.125em;
         margin-left: -0.1875em;
-        background: #000;
+        background: #fff;
         border-radius: 0.25em;
-        box-shadow: 0 5.375em #000;
+        box-shadow: 0 5.375em #fff;
       }
       .rays:before,
       .rays:after {
@@ -112,9 +162,9 @@
         height: 1.125em;
         transform: rotate(60deg);
         transform-origin: 50% 3.25em;
-        background: #000;
+        background: #fff;
         border-radius: 0.25em;
-        box-shadow: 0 5.375em #000;
+        box-shadow: 0 5.375em #fff;
       }
       .rays:before {
         transform: rotate(120deg);
@@ -160,7 +210,7 @@
         top: 50%;
         left: 50%;
         margin: -0.25em 0 0 -0.125em;
-        color: #000;
+        color: #fff;
         opacity: 0.3;
         animation: lightning 2s linear infinite;
       }
@@ -216,7 +266,7 @@
         top: 50%;
         left: 50%;
         margin: -1.025em 0 0 -1.0125em;
-        color: #000;
+        color: #fff;
         list-height: 1em;
         opacity: 0.2;
         animation: spin 8s linear infinite reverse;
@@ -287,8 +337,8 @@
 
       @keyframes lightning {
         45% {
-          color: #000;
-          background: #000;
+          color: #fff;
+          background: #fff;
           opacity: 0.2;
         }
         50% {
@@ -297,8 +347,8 @@
           opacity: 1;
         }
         55% {
-          color: #000;
-          background: #000;
+          color: #fff;
+          background: #fff;
           opacity: 0.2;
         }
       }
